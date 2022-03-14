@@ -137,8 +137,8 @@ void Temperature::fdtd(Siminfo *SimFDTD, Temperature *Told, Data3d *SAR, Data3d 
 
 }
 
-
-printtemp(R, C, SAR, W, Q, SimFDTD, SimFDTD->outputfile);
+printtemp4(SimFDTD, SimFDTD->outputfile);
+//printtemp(R, C, SAR, W, Q, SimFDTD, SimFDTD->outputfile);
 }
 
 void Temperature::printtemp(Data3d* R, Data3d* C, Data3d* SAR, Data3d* W, Data3d* Q, Siminfo* SimFDTD, char* filename)
