@@ -16,10 +16,10 @@ class ThermalProperties(object):
     self.Tissues = filemat['Tissues']
     #dt is the temporal resolution of the simulation
     self.dt = filemat['dt']
-    self.dt = self.dt[0]
+    self.dt = self.dt[0][0]
     #heatingtime is the temporal duration of the simulation
     self.heatingtime = filemat['heatingtime']
-    self.heatingtime = self.heatingtime[0]
+    self.heatingtime = self.heatingtime[0][0]
     #meshsize is a vector of length 3 indicating the resolution of the mesh
     self.meshsize = filemat['meshsize']
     if (self.meshsize.shape[1]>1):
