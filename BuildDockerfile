@@ -19,9 +19,10 @@ RUN mkdir /celery_tasks
 WORKDIR /celery_task
 RUN cmake /src; make; make install
 
+ENV TESS_BIN=/celery_task/cpptemperature
 
 
 #sign!
 RUN mkdir /cloudmr/
-RUN echo "Tess muscle, \ built the " `date` "from user dock " $USER  >/cloudmr/buildversion.txt
+RUN echo "cpptemperature, \ built the " `date` "from user " $USER  >/cloudmr/buildversion.txt
 ENTRYPOINT ["./cpptemperature"]

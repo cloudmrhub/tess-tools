@@ -8,7 +8,7 @@ os.environ['TESS_BIN'] = '/data/PROJECTS/TESS/build/cpptemperature'
 """Then you can instantiate the class
 """
 import Tess
-T=Tess.Tess()
+T=Tess.cmTess()
 
 """At this point the parameter structure is set and we can enter the required maps
 """
@@ -26,21 +26,23 @@ T=Tess.Tess()
 # runInParallel(func1, func2)
 
 
-T.setMask('/data/test/TESS/Rho.nii.gz')
-T.setMaterialDensityMap('/data/test/TESS/Rho.nii.gz')
-T.setBloodPerfusionMap('/data/test/TESS/W.nii.gz')
-T.setHeatCapacityMap('/data/test/TESS/C.nii.gz')
-T.setSARMap('/data/test/TESS/SAR.nii.gz')
-T.setTermalConductivityMap('/data/test/TESS/k.nii.gz')
-T.setTOldMap('/data/test/TESS/TOld.nii.gz')
-T.setMetabolismHeatMap('/data/test/TESS/Q.nii.gz')
+T.setMask('/data/PROJECTS/TESS/testdata/TESS/Rho.nii.gz')
+T.setMaterialDensityMap('/data/PROJECTS/TESS/testdata/TESS/Rho.nii.gz')
+T.setBloodPerfusionMap('/data/PROJECTS/TESS/testdata/TESS/W.nii.gz')
+T.setHeatCapacityMap('/data/PROJECTS/TESS/testdata/TESS/C.nii.gz')
+T.setSARMap('/data/PROJECTS/TESS/testdata/TESS/SAR.nii.gz')
+T.setTermalConductivityMap('/data/PROJECTS/TESS/testdata/TESS/k.nii.gz')
+T.setTOldMap('/data/PROJECTS/TESS/testdata/TESS/TOld.nii.gz')
+T.setMetabolismHeatMap('/data/PROJECTS/TESS/testdata/TESS/Q.nii.gz')
 
 
 
 
 
 
-T.saveOutputMapAs('/data/test/TESS/TESTOUTPUT.nii.gz')
+#T.saveOutputMapAs('/data/PROJECTS/TESS/testdata/TESS/TESTOUTPUT.nii.gz')
+
+T.writeCMResults('/data/PROJECTS/TESS/testdata/TESS/o.json')
 
 
 

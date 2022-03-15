@@ -2,3 +2,17 @@ testdata/
 test/
 myPy
 build/
+C.dat
+dict.json
+file.json
+K.dat
+Q.dat
+R.dat
+SAR.dat
+Told.dat
+test.json
+W.dat
+__pycache__/Tess.cpython-39.pyc
+_appTest.py
+CMRCode/
+CpTemperature/*.dat

@@ -1,9 +1,13 @@
-from inspect import Parameter
+
 from myPy import im,mything,me
+
+    
+
+
 
 class TessMap(im.Imaginable):
     #override
-    def __writeTofile__(self,C,V,filename):
+    def __writeToFile__(self,C,V,filename):
         with open(filename, 'w') as f:
             c=0
             for k in C:
@@ -11,7 +15,21 @@ class TessMap(im.Imaginable):
                 c=c+1
 
     def writeMapToFileAs(self,filename=None,mask=None):
+        """Save the pixels values in the map as txt file with coordinates and value
+        using the pattern defined un __writeTofile
+
+        Args:
+            filename (str, optional): Txt output filename.
+            mask (_type_, optional): If a mask is set the output file will contains only the voxels in the map. Defaults to None.
+
+        Returns:
+            _type_: Bool
+        """        
         return self.writeVoxelsCloudAs(filename,mask)
+
+    
+
+    
     
 
 
@@ -19,7 +37,6 @@ class TessMap(im.Imaginable):
 import os
 
 class Tess(object):
-
     
     def __init__(self):
         self.conf={'bin':os.getenv('TESS_BIN')}
@@ -314,6 +331,14 @@ class Tess(object):
 
     def writeOutputMapAs(self,filename):
         self.saveOutputMapAs(filename)
+
+    
+
+
+
+        
+
+
 
 
 
