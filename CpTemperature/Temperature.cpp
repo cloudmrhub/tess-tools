@@ -327,7 +327,8 @@ void Temperature::fdtdconvec(Siminfo *SimFDTD, Temperature *Told, Data3d *SAR, D
 
 }
 
-printtemp(R, C, SAR, W, Q, SimFDTD, SimFDTD->outputfile);
+printtemp4(SimFDTD, SimFDTD->outputfile);
+//printtemp(R, C, SAR, W, Q, SimFDTD, SimFDTD->outputfile);
 }
 
 int Temperature::checkair(Data3d* R, int i, int j, int k)
