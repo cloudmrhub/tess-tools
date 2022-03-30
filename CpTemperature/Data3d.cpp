@@ -69,7 +69,9 @@ void Data3d::loaddata(long int sizeT0V, char* filetoread)
 
   for(n=1; n<=sizeT0V; n++){
 	fscanf(param3,"%i %i %i %lf\n",&i,&j,&k,&temp);
-	dataarray[i][j][k]=temp;
+	if (i<Nx && i>=0 && j<Ny && j>=0 && k<Nz && k>=0) {
+        	dataarray[i][j][k]=temp;
+        	}
 	}
   fclose(param3);
 
