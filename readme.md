@@ -1,12 +1,12 @@
 # TESS v0.0v
 
 ## Installation
-1. clone [Tess CU](https://github.com/cloudmrhub-com/TESSCU) 
+1. Clone [Tess CU](https://github.com/cloudmrhub-com/TESSCU) 
     ```
     git clone https://github.com/cloudmrhub-com/TESSCU.git
     ```
 
-1. clone [CMRCode](https://github.com/cloudmrhub-com/CMRCode) 
+1. Clone [CMRCode](https://github.com/cloudmrhub-com/CMRCode) 
     ```
     git clone https://github.com/cloudmrhub-com/CMRCode.git
     ```
@@ -16,19 +16,30 @@
     git clone https://github.com/erosmontin/myPy.git && \
     conda env create -f myPy/environment.yml
     ```
-1. extend the Image library environment for tess
+1. Extend the Image library environment for tess
     ```
     conda create --name tess --clone me
     conda activate tess
     pip install -r requirements.txt --user
     ```
+1. Build cpTemperature
+	```
+	cd TESSCU
+	mkdir build && cd build
+	cmake ../CpTemperature; make; make install
 
+	```
 
 ## Usage
+1. Python (preferred)
+1. Bash
+1. docker
+
+### Python
 - Set an environment variable with the absolute position of the cppTemperature executable file
     ```
     import os
-    os.environ['TESS_BIN'] = '/data/PROJECTS/TESS/build/cpptemperature'
+    os.environ['TESS_BIN'] = '/{pathtothegit}/TESSCU/build/cpptemperature'
     ```
 - Instantiate the class
     ```
