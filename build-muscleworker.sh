@@ -1,2 +1,2 @@
-docker build -f BuildDockerfile -t localtessmuscleworker ./
+docker build -f BuildDockerfile -t localtess ./
 

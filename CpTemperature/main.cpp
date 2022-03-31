@@ -14,7 +14,8 @@ int main(int argc, char **argv) {
 
   //This is a little trick to assign a string
   char* filename;
-  string s = "Parameters.dat";
+  //string s = "Parameters.dat";
+  string s = argv[1];
   filename = &s[0];
 
 

@@ -1,9 +1,8 @@
-from numpy import size
 from myPy import im,mything,me
 
-import Tess
 
-import SimpleITK as sitk
+
+from CMRCode.python.cm import writeResultsAsCmJSONOutput
 
 
 
