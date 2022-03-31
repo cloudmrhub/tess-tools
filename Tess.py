@@ -96,8 +96,8 @@ import uuid
 import copy
 class Tess(object):
     
-    def __init__(self):
-        self.conf={'bin':os.getenv('TESS_BIN'),'debug':False}
+    def __init__(self,workingdirectory=None):
+        self.conf={'bin':os.getenv('TESS_BIN','cpptemperature'),'debug':False}
         self.parameters={}
         self.parametersFilename=None
         self.TList=[[]]
@@ -113,6 +113,10 @@ class Tess(object):
         'Output':TessMap(), #Output
                         }
         self.required={}
+        if workingdirectory is None:
+            workingdirectory=str(uuid.uuid4())
+        self.workingdirectory=workingdirectory
+
         self.__reset__()
     
     def setDebug(self):
@@ -122,8 +126,8 @@ class Tess(object):
         self.conf["debug"]=False
 
     def __reset__(self):
-        r=str(uuid.uuid4())
-        r='testdata/'+r[:4]
+        
+        r=self.workingdirectory
         try:
             os.mkdir(r)
         except:
