@@ -10,7 +10,6 @@ using namespace std;
 
 int main(int argc, char **argv) {
 
-  cout << "Pre Pre";
 
   //This is a little trick to assign a string
   char* filename;

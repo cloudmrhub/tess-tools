@@ -1,0 +1,33 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.metadata]
+allow-direct-references = true
+
+[tool.hatch.build.targets.wheel]
+include = ["**/*.py"]
+
+[project]
+name = "tess"
+version = "0.0.1"
+authors = [
+  { name="Dr. Eros Montin, PhD", email="eros.montin@gmail.com" },
+]
+description = "tess"
+readme = "README.md"
+requires-python = ">=3.10"
+
+dependencies = ["pynico_eros_montin @ git+https://github.com/erosmontin/pynico.git","pyable_eros_montin @ git+https://github.com/erosmontin/pyable.git"]
+
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+
+
+[project.urls]
+"Homepage" = "https://github.com/erosmontin/cmrawspy"
+"Bug Tracker" = "https://github.com/erosmontin/cmrawspy/issues"

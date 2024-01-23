@@ -1,6 +1,6 @@
 from scipy.io import loadmat
 import numpy as np
-from myPy import im
+import pyable_eros_montin.imaginable as ima
 
 
 
@@ -279,10 +279,10 @@ class NiftiThermalProperties(ThermalProperties):
         for c in range(0, sizemat[2]):
           cont = cont+1
           if (self.Material[a, b, c]>0):
-            C[c,b,a]=matimage[a, b, c] # yes numpy as a different orientation zyx
+            C[a,b,c]=matimage[a, b, c] 
 
-    o=im.Imaginable()
-    o.setImageArray(C)
+    o=ima.Imaginable()
+    o.setImageFromNumpy(C)
     o.writeImageAs(filename)
   
   def writeSARAs(self,filename):
