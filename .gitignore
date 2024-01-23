@@ -20,5 +20,6 @@ new file
 P.dat
 example_*.py
 tessenv/
+.vscode/
 
 
