@@ -57,5 +57,5 @@ O.viewAxial()
 
 
 
-[Eros Montin, PhD](me.biodimensional.com)
+[Eros Montin, PhD](https://me.biodimensional.com)
 **Forty-six and two are just ahead of me**
