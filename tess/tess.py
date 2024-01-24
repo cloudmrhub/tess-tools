@@ -273,7 +273,11 @@ class Tess:
 
 
 
+def getdfltAir():
+    return {'capacity':1006,'density':1.3,'temperature':296,'metabolism':1006,'conductivity':0.026,'perfusion':0}
 
+def getdfltBlood():
+    return {'capacity':1057,'density':3600,'temperature':310}
 
 def readOutputFile(fn='a.dat'):
     with open(fn, 'r') as f:
