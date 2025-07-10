@@ -90,7 +90,6 @@ pip install git+https://github.com/cloudmrhub/tess-tools.git
 
 ---
 
-# Contributors
 
 # Contributors
 [*Dr. Eros Montin, PhD*](http://me.biodimensional.com)\
