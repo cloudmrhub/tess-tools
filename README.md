@@ -99,9 +99,9 @@ pip install git+https://github.com/cloudmrhub/tess-tools.git
 
 
 [*Dr. Giuseppe Carluccio, PhD*](https://www.docenti.unina.it/#!/professor/47495553455050454341524c554343494f43524c47505038344130334935343958/riferimenti)\
-[![GitHub](https://img.shields.io/badge/GitHub-gcarlu-blue)](https://github.com/gcarlu)\
+[![GitHub](https://img.shields.io/badge/GitHub-gcarluccio-blue)](https://github.com/gcarluccio)\
 [![ORCID](https://img.shields.io/badge/ORCID-0000--0001--5376--3843-green)](https://orcid.org/0000-0001-5376-3843)\
-[![Scopus](https://img.shields.io/badge/Scopus-35604121500-orange)](https://www.scopus.com/authid/detail.uri?authorId=35604121500)
+[![Scopus](https://img.shields.io/badge/Scopus-55589351600-orange)](https://www.scopus.com/authid/detail.uri?authorId=55589351600)
 
 
 [*Prof. Riccardo Lattanzi, PhD*](https://med.nyu.edu/faculty/riccardo-lattanzi)\
