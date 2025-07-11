@@ -1,8 +1,0 @@
-{
-	"InstallScripts" : 
-	[
-		"/data/PROJECTS/tess-tools/_skbuild/linux-x86_64-3.12/cmake-build/cmake_install.cmake",
-		"/data/PROJECTS/tess-tools/_skbuild/linux-x86_64-3.12/cmake-build/CpTemperature/cmake_install.cmake"
-	],
-	"Parallel" : false
-}

@@ -1,1 +1,0 @@
-/data/PROJECTS/tess-tools/_skbuild/linux-x86_64-3.12/cmake-install/tess/bin/cpptemperature
