@@ -23,3 +23,5 @@ tessenv/
 .vscode/
 
 
+_skbuild/
+tess.egg-info/
