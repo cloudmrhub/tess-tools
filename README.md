@@ -48,15 +48,6 @@ pip install git+https://github.com/cloudmrhub/tess-tools.git
 
 ## Versioning
 
-The **TESS Tools** package has two versions:
-
-### V1 (Deprecated)
-- **Name:** `tess`
-- **Status:** Deprecated, maintained for backward compatibility.
-- **Installation:**
-  ```bash
-  pip install git+https://github.com/cloudmrhub/tess-tools.git@v1
-  ```
 
 ### Version 2 (Current)
 - **Name:** `tess-tools`
@@ -65,28 +56,6 @@ The **TESS Tools** package has two versions:
   ```bash
   pip install git+https://github.com/cloudmrhub/tess-tools.git
   ```
-
----
-
-## Key Differences
-
-| Feature                   | Version 1 (`v1`)       | Version 2 (`main`)              |
-|---------------------------|------------------------|---------------------------------|
-| Maintenance               | Deprecated             | Actively maintained             |
-| API                       | Legacy interface       | Improved API, more maps/options |
-| Package name              | `tess`                 | `tess-tools`                    |
-| Supported platforms       | Linux                  | Linux, macOS, Windows           |
-
----
-
-## Migration
-
-If you're using **Version 1**, migrate to **Version 2** for new features and updates:
-
-```bash
-pip uninstall tess
-pip install git+https://github.com/cloudmrhub/tess-tools.git
-```
 
 ---
 
