@@ -1,0 +1,16 @@
+LICENSE
+README.md
+pyproject.toml
+setup.py
+_skbuild/linux-x86_64-3.12/cmake-install/tess/__init__.py
+_skbuild/linux-x86_64-3.12/cmake-install/tess/tess.py
+_skbuild/linux-x86_64-3.12/cmake-install/tess/bin/cpptemperature
+tess/__init__.py
+tess/tess.py
+tess.egg-info/PKG-INFO
+tess.egg-info/SOURCES.txt
+tess.egg-info/dependency_links.txt
+tess.egg-info/not-zip-safe
+tess.egg-info/requires.txt
+tess.egg-info/top_level.txt
+test/test.py

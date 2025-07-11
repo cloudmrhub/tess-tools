@@ -1,16 +1,26 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = [
+  "setuptools>=61.0.0",
+  "wheel",
+  "scikit-build>=0.15.0",     # <— adds the 'skbuild' module
+  "cmake>=3.18",
+  "ninja"                  # optional, but faster than 'make'
+]
+build-backend = "setuptools.build_meta"
 
 [tool.hatch.metadata]
 allow-direct-references = true
 
 [tool.hatch.build.targets.wheel]
-include = ["**/*.py"]
+# remove or extend this filter so your bin/ folder isn’t excluded
+include = [
+  "**/*.py",
+  "tess/bin/*"
+]
 
 [project]
 name = "tess"
-version = "1.0.0.2"
+version = "1.0.0.4"
 authors = [
   { name="Dr. Eros Montin, PhD", email="eros.montin@gmail.com" },
 ]

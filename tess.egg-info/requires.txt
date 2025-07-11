@@ -1,0 +1,2 @@
+pynico_eros_montin@ git+https://github.com/erosmontin/pynico.git
+pyable_eros_montin@ git+https://github.com/erosmontin/pyable.git
