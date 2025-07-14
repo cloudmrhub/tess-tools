@@ -8,16 +8,7 @@ RUN apt-get update && apt-get install -y \
     git \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-#
-# Create app directory
-#WORKDIR /app
-#
-# Copy only the necessary files first to leverage Docker cache
-#COPY pyproject.toml README.md MANIFEST.in ./
-#COPY tess/ ./tess/
-#COPY CpTemperature/ ./CpTemperature/
-#COPY CMakeLists.txt ./
-#
+
 # Install the package
 RUN pip install git+https://github.com/cloudmrhub/tess-tools
 COPY tess/test.py .
