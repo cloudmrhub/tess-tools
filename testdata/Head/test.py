@@ -2,14 +2,14 @@ import tess.tess as t
 A=t.Tess()
 
 
-A.setSpace('testdata/Head/MaterialDensity.nii.gz')
+A.setSpace('MaterialDensity.nii.gz')
 A.setHeatingTime(10)
-A.setBloodPerfusionMap('testdata/Head/BloodPerfusion.nii.gz')
-A.setMaterialDensityMap('testdata/Head/MaterialDensity.nii.gz')
-A.setHeatCapacityMap('testdata/Head/HeatCapacity.nii.gz')
-A.setSARMap('testdata/Head/MaterialDensity.nii.gz')
-A.setThermalConductivityMap('testdata/Head/ThermalConductivity.nii.gz')
-A.setMetabolismHeatMap('testdata/Head/Metabolism.nii.gz')
+A.setBloodPerfusionMap('BloodPerfusion.nii.gz')
+A.setMaterialDensityMap('MaterialDensity.nii.gz')
+A.setHeatCapacityMap('HeatCapacity.nii.gz')
+A.setSARMap('MaterialDensity.nii.gz')
+A.setThermalConductivityMap('ThermalConductivity.nii.gz')
+A.setMetabolismHeatMap('Metabolism.nii.gz')
 
 # set blood parameters
 A.setBloodParameters(d={'capacity':1057,'density':3600,'temperature':310})
