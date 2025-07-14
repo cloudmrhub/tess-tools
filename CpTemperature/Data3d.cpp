@@ -1,6 +1,7 @@
 #include "Data3d.h"
 #include <iostream>
-#include <malloc.h>
+//#include <malloc.h>
+#include "stdlib.h"
 #include <stdio.h>
 
 
