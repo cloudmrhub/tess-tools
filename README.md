@@ -13,25 +13,47 @@
 Run a simulation using the Python API:
 
 ```python
-import tess.tess as t
+import importlib.resources
+DIR = importlib.resources.files('tess').joinpath('testdata').joinpath('Head')
 
-A = t.Tess()
-A.setSpace('testdata/Head/MaterialDensity.nii.gz')
-A.binfile = './build/cpptemperature'
+print(DIR)
+
+import tess.tess as t
+A=t.Tess()
+import os
+
+A.setSpace(os.path.join(DIR,'MaterialDensity.nii.gz'))
 A.setHeatingTime(10)
-A.setBloodPerfusionMap('testdata/Head/BloodPerfusion.nii.gz')
-A.setMaterialDensityMap('testdata/Head/MaterialDensity.nii.gz')
-A.setHeatCapacityMap('testdata/Head/HeatCapacity.nii.gz')
-A.setSARMap('testdata/Head/SAR.nii.gz')
-A.setThermalConductivityMap('testdata/Head/ThermalConductivity.nii.gz')
-A.setMetabolismHeatMap('testdata/Head/Metabolism.nii.gz')
-A.setBloodParameters(d={'capacity':1057, 'density':3600, 'temperature':310})
-A.setAirParameters(d={'capacity':1006, 'density':1.3, 'temperature':296, 'metabolism':1006, 'conductivity':0.026, 'perfusion':0})
-O = A.getOutput('/tmp/output_temperature.nii.gz')
+A.setBloodPerfusionMap(os.path.join(DIR,'BloodPerfusion.nii.gz'))
+A.setMaterialDensityMap(os.path.join(DIR,'MaterialDensity.nii.gz'))
+A.setHeatCapacityMap(os.path.join(DIR,'HeatCapacity.nii.gz'))
+A.setSARMap(os.path.join(DIR,'SAR.nii.gz'))
+A.setThermalConductivityMap(os.path.join(DIR,'ThermalConductivity.nii.gz'))
+A.setMetabolismHeatMap(os.path.join(DIR,'Metabolism.nii.gz'))
+
+# set blood parameters
+A.setBloodParameters(d={'capacity':1057,'density':3600,'temperature':310})
+# set air parameters
+A.setAirParameters(d={'capacity':1006,'density':1.3,'temperature':296,'metabolism':1006,'conductivity':0.026,'perfusion':0})
+
+O=A.getOutput('/tmp/a.nii')
+A.log.printWhatHappened()
+print(A.params)
 O.viewAxial()
+
 ```
 
 ---
+
+# Requiremensts
+1. Python 3.10 or newer
+1. Virtual environment management (recommended):
+   - Python's venv module, or
+   - Conda environment
+1. C++ compiler and build tools:
+   - cmake >=3.18
+   - gcc/clang
+   - ninja build system
 
 # Installation
 
