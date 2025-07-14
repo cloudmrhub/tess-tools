@@ -8,19 +8,9 @@ requires = [
 ]
 build-backend = "setuptools.build_meta"
 
-[tool.hatch.metadata]
-allow-direct-references = true
-
-[tool.hatch.build.targets.wheel]
-# remove or extend this filter so your bin/ folder isn’t excluded
-include = [
-  "**/*.py",
-  "tess/bin/*"
-]
-
 [project]
 name = "tess"
-version = "2.0.0.1"
+version = "2.0.0.5"
 authors = [
   { name="Dr. Eros Montin, PhD", email="eros.montin@gmail.com" },
 ]
@@ -36,7 +26,14 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[tool.setuptools]
+include-package-data = true
 
+[tool.setuptools.package-data]
+"tess" = [
+  "bin/*",
+  "testdata/**/*"
+]
 
 [project.urls]
 "Homepage" = "https://github.com/erosmontin/cmrawspy"
