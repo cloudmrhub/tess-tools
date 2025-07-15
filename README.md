@@ -46,14 +46,51 @@ O.viewAxial()
 ---
 
 # Requiremensts
+
+## General
 1. Python 3.10 or newer
 1. Virtual environment management (recommended):
    - Python's venv module, or
    - Conda environment
+
+## Linux
+
+
 1. C++ compiler and build tools:
-   - cmake >=3.18
-   - gcc/clang
-   - ninja build system
+  - gcc (or clang)
+  - cmake >= 3.18
+  - ninja-build
+1. Git
+Install via:
+```bash
+sudo apt-get update && sudo apt-get install -y \
+  build-essential cmake ninja-build git
+```
+
+
+## Windows
+1. Python 3.10+ from https://www.python.org/downloads/windows/
+1. Virtual Environment: venv (default) or conda
+1. C++ compiler and build tools:
+  - Visual Studio Build Tools (https://visualstudio.microsoft.com/visual-cpp-build-tools/) Select Desktop Development with C++ and C++ CMake tools for Windows
+  - Alternative: MinGW-w64 (https://www.mingw-w64.org/) if GCC-style tools are preferred
+1. CMake https://cmake.org/download/ >= 3.18
+1. Ninja https://github.com/ninja-build/ninja/releases
+1. Git https://git-scm.com/download/win
+
+## macOS
+
+1. Python 3.10+ via https://www.python.org/downloads/mac-osx/ or Homebrew
+1. Virtual Environment: venv or conda
+1. Apple Clang (via Xcode Command Line Tools):
+
+```
+xcode-select --install
+```
+1. Homebrew packages
+```
+brew install cmake ninja git gcc
+```
 
 # Installation
 
