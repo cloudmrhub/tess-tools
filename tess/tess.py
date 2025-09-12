@@ -64,7 +64,10 @@ class Tess:
         # self.parameterfile='/data/PROJECTS/tess/testdata/5594/Parameters.dat'
         self.params=[]
         self.Space=None
-        exe = importlib.resources.files(__package__).joinpath("bin", "cpptemperature")
+        if __package__ is None or __package__ == "":
+            exe="_skbuild/linux-x86_64-3.12/setuptools/lib.linux-x86_64-cpython-312/tess/bin/cpptemperature"
+        else:
+            exe = importlib.resources.files(__package__).joinpath("bin", "cpptemperature")
         print(f"Using executable {exe}")
         self.binfile = str(exe)
         self.params.append({"label":"Nx","name":"Nx","value":None})
@@ -136,7 +139,8 @@ class Tess:
         self.log.append(f"Space set to {dx}x{dy}x{dz}")
         T0V=m.getNumberofVoxels()
         self.log.append(f"T0V set to {T0V}")
-        zmin,zmax=findBoundingBoxZ(m.getImageAsNumpy())
+        # zmin,zmax=findBoundingBoxZ(m.getImageAsNumpy())
+        zmin,zmax=0,Nz
         self.setParam("zmin",zmin)
         self.setParam("zmax",zmax)
         self.setParam("T0V",T0V)
@@ -268,7 +272,27 @@ class Tess:
             raise Exception("Output file not defined")
         O = readOutputFile(F)
         IM=self.Space.getDuplicate()
-        IM.setImageFromNumpy(O)
+        if IM.getImageAsNumpy().shape!=O.shape:
+            # Create padded array if difference is ~1 pixel
+            n_shape = IM.getImageAsNumpy().shape
+            o_shape = O.shape
+            pad_width = []
+            for n, o in zip(n_shape, o_shape):
+                diff = n - o
+                if diff > 0:
+                    # Add padding evenly on both sides
+                    pad_width.append((0, diff))
+                    
+                else:
+                    pad_width.append((0, 0))
+                    
+            # Pad the smaller array O to match N's dimensions
+            O_padded = np.pad(O, pad_width, mode='edge')
+            IM.setImageFromNumpy(O_padded)
+        else:
+            IM.setImageFromNumpy(O)
+                
+
         if outputfilename is not None:
             IM.writeImageAs(outputfilename)
         return IM
@@ -314,3 +338,31 @@ def readOutputFile(fn='a.dat'):
 
 
 
+if __name__=="__main__":
+    
+    A=Tess()
+    import os
+
+    A.setSpace('/home/eros/Downloads/hugo-materialdensity.nii.gz')
+    A.setHeatingTime(2)
+    A.setBloodPerfusionMap('/home/eros/Downloads/hugo-bloodperfusion.nii.gz')
+    A.setMaterialDensityMap('/home/eros/Downloads/hugo-materialdensity.nii.gz')
+    A.setHeatCapacityMap('/home/eros/Downloads/hugo-heatcapacity.nii.gz')
+    A.setSARMap('/home/eros/Downloads/hugo-SAR.nii.gz')
+    A.setThermalConductivityMap('/home/eros/Downloads/hugo-thermalconductivity.nii.gz')
+    A.setMetabolismHeatMap('/home/eros/Downloads/hugo-metabolism.nii.gz')
+
+    # set blood parameters
+    A.setBloodParameters(d={'capacity':1057,'density':3600,'temperature':310})
+    # set air parameters
+    A.setAirParameters(d={'capacity':1006,'density':1.3,'temperature':296,'metabolism':1006,'conductivity':0.026,'perfusion':0})
+
+    O=A.getOutput('/tmp/a.nii')
+    MD=ima.Imaginable('/home/eros/Downloads/hugo-materialdensity.nii.gz')
+    M=ima.Imaginable('/home/eros/Downloads/hugo-metabolism.nii.gz')
+    
+    
+    A.log.printWhatHappened()
+    
+    print(A.params)
+    O.viewAxial()
