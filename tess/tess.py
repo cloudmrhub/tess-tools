@@ -412,7 +412,7 @@ if __name__=="__main__":
         print(f"Set {key} from {l}")
         
     # A.setSpace('/home/eros/Downloads/hugo-materialdensity.nii.gz')
-    A.setHeatingTime(20)
+    A.setHeatingTime(200)
     # A.setBloodPerfusionMap('/home/eros/Downloads/hugo-bloodperfusion.nii.gz')
     # A.setMaterialDensityMap('/home/eros/Downloads/hugo-materialdensity.nii.gz')
     # A.setHeatCapacityMap('/home/eros/Downloads/hugo-heatcapacity.nii.gz')
@@ -425,9 +425,10 @@ if __name__=="__main__":
     # # set air parameters
     A.setAirParameters(d={'capacity':1006,'density':1.3,'temperature':296,'metabolism':1006,'conductivity':0.026,'perfusion':0})
     # # A.setTOldMap('https://github.com/cloudmrhub/mroptimum-app/tree/py-cloudmr-brain.nii.gz')
+    A.setParam("scaleSARfile",'/home/eros/a.txt')
+
     O=A.getOutput('/tmp/a20.nii')
     
-    A.setParam("scaleSARfile",'/home/eros/a.txt')
     # A.log.printWhatHappened()
     
     # print(A.params)
