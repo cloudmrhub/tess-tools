@@ -15,10 +15,11 @@ A.setHeatCapacityMap(os.path.join(DIR,'HeatCapacity.nii.gz'))
 A.setSARMap(os.path.join(DIR,'SAR.nii.gz'))
 A.setThermalConductivityMap(os.path.join(DIR,'ThermalConductivity.nii.gz'))
 A.setMetabolismHeatMap(os.path.join(DIR,'Metabolism.nii.gz'))
-
+A.setTOldMap(os.path.join(DIR,'TOld.nii.gz'))
 # set blood parameters
 A.setBloodParameters(d={'capacity':1057,'density':3600,'temperature':310})
 # set air parameters
+
 A.setAirParameters(d={'capacity':1006,'density':1.3,'temperature':296,'metabolism':1006,'conductivity':0.026,'perfusion':0})
 
 O=A.getOutput('/tmp/a.nii')

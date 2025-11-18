@@ -2,6 +2,7 @@
 #include <iostream>
 #include <stdio.h>
 # include <math.h>
+#include <omp.h> // Added OpenMP header
 #include "Siminfo.h"
 
 //#include <malloc.h>
@@ -36,6 +37,13 @@ void Temperature::fdtd(Siminfo *SimFDTD, Temperature *Told, Data3d *SAR, Data3d 
   double h1x, h2x, dKdx, dTdx, dT2dx2, gradx, h1y, h2y, dKdy, dTdy, dT2dy2, grady, h1z, h2z, dKdz, dTdz, dT2dz2, gradz;
   char filesave[150];
 
+    // DIAGNOSTIC: Check if OpenMP is actually enabled
+    #ifdef _OPENMP
+       if (step == 0) printf(">>> OpenMP IS ACTIVE. Available threads: %d\n", omp_get_max_threads());
+    #else
+       if (step == 0) printf(">>> OpenMP IS NOT ACTIVE. Running in serial.\n");
+    #endif
+
 	//while(errE>eps){
 	while(step<nStep && errE>SimFDTD->eps){
 	//while(step<10){
@@ -46,27 +54,32 @@ void Temperature::fdtd(Siminfo *SimFDTD, Temperature *Told, Data3d *SAR, Data3d 
 
 		errE=0;
 
-
+		// Added schedule(dynamic) to balance load between threads (Air vs Tissue)
+		#pragma omp parallel for schedule(dynamic) private(j, k, Ttm1, temp, temp1, h1x, h2x, dKdx, dTdx, dT2dx2, gradx, h1y, h2y, dKdy, dTdy, dT2dy2, grady, h1z, h2z, dKdz, dTdz, dT2dz2, gradz) reduction(+:errE)
 		for(i=7;i<(Nx-7);i++){
+			// Optimization: Hoist X calculations out of inner loops
+			h2x = posx->get(i+1)-posx->get(i);
+			h1x = posx->get(i)-posx->get(i-1);
+
 			for(j=7;j<(Ny-7);j++){
+				// Optimization: Hoist Y calculations out of inner loop
+				h2y = posy->get(j+1)-posy->get(j);
+				h1y = posy->get(j)-posy->get(j-1);
+
 				for(k=(SimFDTD->zmin)-1;k<(SimFDTD->zmax)+1;k++){
 					if(R->get(i,j,k)>50){
 
 					Ttm1=Told->get(i,j,k);
 
-
-
-
-					h2x = posx->get(i+1)-posx->get(i);
-					h1x = posx->get(i)-posx->get(i-1);
+					// Removed redundant calculations of h1x, h2x, h1y, h2y
 
 					dKdx = -(h2x/(h1x*(h1x+h2x)))*K->get(i-1,j,k)+((h2x/(h1x*(h1x+h2x)))-(h1x/(h2x*(h1x+h2x))))*K->get(i,j,k)+(h1x/(h2x*(h1x+h2x)))*K->get(i+1,j,k);
 					dTdx = -(h2x/(h1x*(h1x+h2x)))*Told->get(i-1,j,k)+((h2x/(h1x*(h1x+h2x)))-(h1x/(h2x*(h1x+h2x))))*Told->get(i,j,k)+(h1x/(h2x*(h1x+h2x)))*Told->get(i+1,j,k);
 					dT2dx2= (2/(h1x*(h1x+h2x)))*Told->get(i-1,j,k)+(-(2/(h1x*(h1x+h2x)))-(2/(h2x*(h1x+h2x))))*Told->get(i,j,k)+(2/(h2x*(h1x+h2x)))*Told->get(i+1,j,k);
 					gradx = dKdx*dTdx+K->get(i,j,k)*dT2dx2;
 
-					h2y = posy->get(j+1)-posy->get(j);
-					h1y = posy->get(j)-posy->get(j-1);
+					// Removed redundant calculations of h1y, h2y
+
 					dKdy = -(h2y/(h1y*(h1y+h2y)))*K->get(i,j-1,k)+((h2y/(h1y*(h1y+h2y)))-(h1y/(h2y*(h1y+h2y))))*K->get(i,j,k)+(h1y/(h2y*(h1y+h2y)))*K->get(i,j+1,k);
 					dTdy = -(h2y/(h1y*(h1y+h2y)))*Told->get(i,j-1,k)+((h2y/(h1y*(h1y+h2y)))-(h1y/(h2y*(h1y+h2y))))*Told->get(i,j,k)+(h1y/(h2y*(h1y+h2y)))*Told->get(i,j+1,k);
 					dT2dy2= (2/(h1y*(h1y+h2y)))*Told->get(i,j-1,k)+(-(2/(h1y*(h1y+h2y)))-(2/(h2y*(h1y+h2y))))*Told->get(i,j,k)+(2/(h2y*(h1y+h2y)))*Told->get(i,j+1,k);
@@ -125,6 +138,8 @@ void Temperature::fdtd(Siminfo *SimFDTD, Temperature *Told, Data3d *SAR, Data3d 
 
 		//printf("step= %i, errE= %e, val= %lf, Tblood = %f \n",step,errE, R->get(43,60,44), TempBlood);
 		printf("step= %i, errE= %e, val= %lf, Tblood = %f \n",step,errE, dataarray[100][50][50], TempBlood);
+		
+		#pragma omp parallel for private(j, k)
 		for(i=1;i<(Nx-1);i++){for(j=1;j<(Ny-1);j++){for(k=1;k<(Nz-1);k++){Told->set(i,j,k, dataarray[i][j][k]);}}}
 
 		if (timmod<SimFDTD->maxsavetime) {
@@ -195,9 +210,18 @@ void Temperature::fdtdconvec(Siminfo *SimFDTD, Temperature *Told, Data3d *SAR, D
 
 		errE=0;
 
-
+		// Added schedule(dynamic)
+		#pragma omp parallel for schedule(dynamic) private(j, k, aircheck, Ttm1, temp, temp1, h1x, h2x, dKdx, dTdx, dT2dx2, gradx, h1y, h2y, dKdy, dTdy, dT2dy2, grady, h1z, h2z, dKdz, dTdz, dT2dz2, gradz, hconvec, qx, qy, qz) reduction(+:errE)
 		for(i=7;i<(Nx-7);i++){
+			// Optimization: Hoist X calculations
+			h2x = posx->get(i+1)-posx->get(i);
+			h1x = posx->get(i)-posx->get(i-1);
+
 			for(j=7;j<(Ny-7);j++){
+				// Optimization: Hoist Y calculations
+				h2y = posy->get(j+1)-posy->get(j);
+				h1y = posy->get(j)-posy->get(j-1);
+
 				for(k=(SimFDTD->zmin)-1;k<(SimFDTD->zmax)+1;k++){
 					if(R->get(i,j,k)>50){
 
@@ -205,11 +229,7 @@ void Temperature::fdtdconvec(Siminfo *SimFDTD, Temperature *Told, Data3d *SAR, D
 
                         Ttm1=Told->get(i,j,k);
 
-                        h2x = posx->get(i+1)-posx->get(i);
-                        h1x = posx->get(i)-posx->get(i-1);
-
-                        h2y = posy->get(j+1)-posy->get(j);
-                        h1y = posy->get(j)-posy->get(j-1);
+                        // Removed redundant h1x, h2x, h1y, h2y calculations
 
                         h2z = posz->get(k+1)-posz->get(k);
                         h1z = posz->get(k)-posz->get(k-1);
@@ -315,6 +335,8 @@ void Temperature::fdtdconvec(Siminfo *SimFDTD, Temperature *Told, Data3d *SAR, D
 
 		//printf("step= %i, errE= %e, val= %lf, Tblood = %f \n",step,errE, R->get(43,60,44), TempBlood);
 		printf("step= %i, errE= %e, val= %lf, Tblood = %f \n",step,errE, dataarray[100][50][50], TempBlood);
+		
+		#pragma omp parallel for private(j, k)
 		for(i=1;i<(Nx-1);i++){for(j=1;j<(Ny-1);j++){for(k=1;k<(Nz-1);k++){Told->set(i,j,k, dataarray[i][j][k]);}}}
 
 		if (timmod<SimFDTD->maxsavetime) {

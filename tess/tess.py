@@ -1,3 +1,4 @@
+from ast import Raise
 import importlib.resources
 import pynico_eros_montin.pynico as pn  
 import numpy as np
@@ -6,7 +7,15 @@ import pyable_eros_montin.imaginable as ima
 
 #iterate over a 3dimension matrix
 
-
+def datnoNii(filename,outputfilename=None):
+    O=readOutputFile(filename)
+    IM=ima.Imaginable()
+    IM.setImageFromNumpy(O)
+    if outputfilename is not None:
+        IM.writeImageAs(outputfilename)
+    else:
+        return IM
+    
 
 def writeVoxelsToFiles(matricesfilenames, S,outputfilename=None):
     #tess works in voxels, so we need to convert the matrixes to voxels
@@ -64,10 +73,38 @@ class Tess:
         # self.parameterfile='/data/PROJECTS/tess/testdata/5594/Parameters.dat'
         self.params=[]
         self.Space=None
-        if __package__ is None or __package__ == "":
-            exe="_skbuild/linux-x86_64-3.12/setuptools/lib.linux-x86_64-cpython-312/tess/bin/cpptemperature"
-        else:
-            exe = importlib.resources.files(__package__).joinpath("bin", "cpptemperature")
+        
+        import os
+        exe = None
+        
+        # 1. Try installed package path (works for pip install .)
+        try:
+            pkg = __package__ if (__package__) else "tess"
+            ref = importlib.resources.files(pkg).joinpath("bin", "cpptemperature")
+            with importlib.resources.as_file(ref) as path:
+                if path.exists():
+                    exe = str(path)
+        except Exception:
+            pass
+
+        # 2. Fallback: Search in _skbuild for development/local runs
+        if exe is None:
+            # Go up from tess/tess.py to project root
+            root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+            skbuild_path = os.path.join(root_dir, "_skbuild")
+            
+            if os.path.exists(skbuild_path):
+                for root, _, files in os.walk(skbuild_path):
+                    if "cpptemperature" in files:
+                        candidate = os.path.join(root, "cpptemperature")
+                        if os.access(candidate, os.X_OK):
+                            exe = candidate
+                            break
+        
+        if exe is None:
+             print("WARNING: cpptemperature executable not found. Ensure the package is installed or built.")
+             exe = "cpptemperature" # Last resort: assume it's in system PATH
+
         print(f"Using executable {exe}")
         self.binfile = str(exe)
         self.params.append({"label":"Nx","name":"Nx","value":None})
@@ -197,7 +234,7 @@ class Tess:
         self.log.append(f"Temperature calculation started {self.binfile} {self.parameterfile}")
         b.run()
         self.log.append(f"Temperature calculated")
-
+        print(b.getBashOutput())
         return True
     
     def setBloodPerfusionMap(self, imagefilename):
@@ -243,6 +280,17 @@ class Tess:
         else:
             raise Exception(f"File {imagefilename} does not exist")
         
+    def varToMapsName(self):
+        L={
+            "W":self.setBloodPerfusionMap,
+            "R":self.setMaterialDensityMap,
+            "Q":self.setMetabolismHeatMap,
+            "C":self.setHeatCapacityMap,
+            "K":self.setThermalConductivityMap,
+            "SAR":self.setSARMap,
+            "Told":self.setTOldMap,
+        }
+        return L
 
     def setMask(self, imagefilename):
         self.setParam("mask",imagefilename)
@@ -270,7 +318,7 @@ class Tess:
         F=self.getParam("outputfile")
         if F is None:
             raise Exception("Output file not defined")
-        O = readOutputFile(F)
+        O = readOutputFile(F,airtemperature=self.getParam("Tair"))
         IM=self.Space.getDuplicate()
         if IM.getImageAsNumpy().shape!=O.shape:
             # Create padded array if difference is ~1 pixel
@@ -292,7 +340,11 @@ class Tess:
         else:
             IM.setImageFromNumpy(O)
                 
-
+        n=IM.getImageAsNumpy()
+        n[n<0]=self.getParam("Tair")
+        n[n==0]=self.getParam("Tair")
+        IM.setImageFromNumpy(n)
+        
         if outputfilename is not None:
             IM.writeImageAs(outputfilename)
         return IM
@@ -306,7 +358,7 @@ def getdfltAir():
 def getdfltBlood():
     return {'capacity':1057,'density':3600,'temperature':310}
 
-def readOutputFile(fn='a.dat'):
+def readOutputFile(fn='a.dat',airtemperature=0):
     with open(fn, 'r') as f:
         lines = [line.rstrip('\n') for line in f]
         f.close()
@@ -328,7 +380,7 @@ def readOutputFile(fn='a.dat'):
         if z>Z:
             Z=z
         O.append({"voxel":[x,y,z],"value":v})
-    OUT=np.zeros((X+1,Y+1,Z+1))
+    OUT=np.ones((X+1,Y+1,Z+1))*airtemperature
     for o in O:
         OUT[o["voxel"][0],o["voxel"][1],o["voxel"][2]]=o["value"]
     return OUT
@@ -339,30 +391,44 @@ def readOutputFile(fn='a.dat'):
 
 
 if __name__=="__main__":
+    import glob
+    # k=glob.glob('/home/eros/Downloads/Temperature Sample/*.dat')
+    # for f in k:
+    #     try:
+    #         datnoNii(f,f.replace('.dat','.nii.gz'))
+    #     except Exception as e:
+    #         print(f"Error processing {f}: {e}")
+            
     
     A=Tess()
     import os
 
-    A.setSpace('/home/eros/Downloads/hugo-materialdensity.nii.gz')
-    A.setHeatingTime(2)
-    A.setBloodPerfusionMap('/home/eros/Downloads/hugo-bloodperfusion.nii.gz')
-    A.setMaterialDensityMap('/home/eros/Downloads/hugo-materialdensity.nii.gz')
-    A.setHeatCapacityMap('/home/eros/Downloads/hugo-heatcapacity.nii.gz')
-    A.setSARMap('/home/eros/Downloads/hugo-SAR.nii.gz')
-    A.setThermalConductivityMap('/home/eros/Downloads/hugo-thermalconductivity.nii.gz')
-    A.setMetabolismHeatMap('/home/eros/Downloads/hugo-metabolism.nii.gz')
+    A.setSpace('/home/eros/Downloads/TemperatureSample/R.nii.gz')            
+    L=A.varToMapsName()
+    LIST=glob.glob('/home/eros/Downloads/TemperatureSample/*.nii.gz')
+    for l in LIST:
+        key=os.path.basename(l).split('.')[0]
+        L[key](l)
+        print(f"Set {key} from {l}")
+        
+    # A.setSpace('/home/eros/Downloads/hugo-materialdensity.nii.gz')
+    A.setHeatingTime(20)
+    # A.setBloodPerfusionMap('/home/eros/Downloads/hugo-bloodperfusion.nii.gz')
+    # A.setMaterialDensityMap('/home/eros/Downloads/hugo-materialdensity.nii.gz')
+    # A.setHeatCapacityMap('/home/eros/Downloads/hugo-heatcapacity.nii.gz')
+    # A.setSARMap('/home/eros/Downloads/hugo-SAR.nii.gz')
+    # A.setThermalConductivityMap('/home/eros/Downloads/hugo-thermalconductivity.nii.gz')
+    # A.setMetabolismHeatMap('/home/eros/Downloads/hugo-metabolism.nii.gz')
 
-    # set blood parameters
+    # # set blood parameters
     A.setBloodParameters(d={'capacity':1057,'density':3600,'temperature':310})
-    # set air parameters
+    # # set air parameters
     A.setAirParameters(d={'capacity':1006,'density':1.3,'temperature':296,'metabolism':1006,'conductivity':0.026,'perfusion':0})
-
-    O=A.getOutput('/tmp/a.nii')
-    MD=ima.Imaginable('/home/eros/Downloads/hugo-materialdensity.nii.gz')
-    M=ima.Imaginable('/home/eros/Downloads/hugo-metabolism.nii.gz')
+    # # A.setTOldMap('https://github.com/cloudmrhub/mroptimum-app/tree/py-cloudmr-brain.nii.gz')
+    O=A.getOutput('/tmp/a20.nii')
     
     
-    A.log.printWhatHappened()
+    # A.log.printWhatHappened()
     
-    print(A.params)
-    O.viewAxial()
+    # print(A.params)
+    # O.viewAxial()
