@@ -427,7 +427,7 @@ if __name__=="__main__":
     # # A.setTOldMap('https://github.com/cloudmrhub/mroptimum-app/tree/py-cloudmr-brain.nii.gz')
     O=A.getOutput('/tmp/a20.nii')
     
-    
+    A.setParam("scaleSARfile",'/home/eros/a.txt')
     # A.log.printWhatHappened()
     
     # print(A.params)
