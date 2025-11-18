@@ -28,3 +28,4 @@ tess.egg-info/
 CpTemperature/_cpptemperature
 *.pyc
 
+tess/__pycache__/tess.cpython-310.pyc
