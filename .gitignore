@@ -25,3 +25,4 @@ tessenv/
 
 _skbuild/
 tess.egg-info/
+CpTemperature/_cpptemperature
