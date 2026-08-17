@@ -18,7 +18,10 @@ description = "tess"
 readme = "README.md"
 requires-python = ">=3.10"
 
-dependencies = ["pynico_eros_montin @ git+https://github.com/erosmontin/pynico.git","pyable_eros_montin @ git+https://github.com/erosmontin/pyable.git"]
+dependencies = [
+  "pynico_eros_montin @ git+https://github.com/erosmontin/pynico.git@v2",
+  "pyable_eros_montin @ git+https://github.com/erosmontin/pyable.git@v2",
+]
 
 classifiers = [
     "Programming Language :: Python :: 3",
