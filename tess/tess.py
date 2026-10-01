@@ -143,6 +143,10 @@ class Tess:
         self.params.append({"label":"Poszfile","name":"Poszfile","value":"uniform"})
         self.params.append({"label":"Tbloodfile","name":"Tbloodfile","value":"constant"})
         self.params.append({"label":"scaleSARfile","name":"scaleSARfile","value":"constant"})
+        # "mask" is not a cpptemperature parameter: the solver has no concept of
+        # a mask file. It exists only so Python callers can record which image
+        # was used as the reference geometry (see setSpace/setMask below).
+        self.params.append({"label":"mask","name":"mask","value":None})
     
 
 
@@ -293,7 +297,16 @@ class Tess:
         return L
 
     def setMask(self, imagefilename):
-        self.setParam("mask",imagefilename)
+        """Record the mask used as the reference geometry.
+
+        This does not feed the C++ solver (it has no mask input); call
+        setSpace(imagefilename) separately to actually set Nx/Ny/Nz/dx/dy/dz
+        from this image. setMask only stores the filename for provenance/debug.
+        """
+        if pn.Pathable(imagefilename).exists():
+            self.setParam("mask",imagefilename)
+        else:
+            raise Exception(f"File {imagefilename} does not exist")
     def setHeatingTime(self, heatingtime):
         self.setParam("heatingtime",heatingtime)
     def setAirParameters(self, d):
